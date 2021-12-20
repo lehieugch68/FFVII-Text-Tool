@@ -228,6 +228,7 @@ namespace FFVII_Text_Tool
                         }
                     }
                     File.WriteAllBytes(uexpPath, stream.ToArray());
+                    Console.WriteLine("Repacked: {0}", header.FileName);
                 }
             }
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Net;
 
 namespace FFVII_Text_Tool
 {
@@ -29,11 +30,20 @@ namespace FFVII_Text_Tool
                     case "-i":
                         if (args.Length >= 4)
                         {
-                            TextExtractor.ImportXLSX(args[1], args[2], args[3]);
+                            string xlsx = args[1];
+                            if (Uri.IsWellFormedUriString(xlsx, UriKind.RelativeOrAbsolute))
+                            {
+                                using (WebClient wc = new WebClient())
+                                {
+                                    xlsx = Path.Combine(AppContext.BaseDirectory, "Translation.xlsx");
+                                    wc.DownloadFile(new Uri(args[1]), xlsx);
+                                }
+                            }
+                            TextExtractor.ImportXLSX(xlsx, args[2], args[3]);
                         }
                         else
                         {
-                            Console.WriteLine("-> Type \"-i [XLSX File] [Original Folder] [Output Folder]\" to re-import the folder.");
+                            Console.WriteLine("-> Type \"-i [XLSX Path/URL] [Original Folder] [Output Folder]\" to re-import the folder.");
                         }
                         break;
                     default:
@@ -48,7 +58,7 @@ namespace FFVII_Text_Tool
         }
         static void Help()
         {
-            Console.WriteLine("Usage:\n-> Type \"-e [Input Folder] [Output XLSX File]\" to extract the folder.\n-> Type \"-i [XLSX File] [Original Folder] [Output Folder]\" to re-import the folder.");
+            Console.WriteLine("Usage:\n-> Type \"-e [Input Folder] [Output XLSX File]\" to extract the folder.\n-> Type \"-i [XLSX Path/URL] [Original Folder] [Output Folder]\" to re-import the folder.");
         }
     }
 }
