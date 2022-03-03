@@ -31,7 +31,7 @@ namespace FFVII_Text_Tool
                         if (args.Length >= 4)
                         {
                             string xlsx = args[1];
-                            if (Uri.IsWellFormedUriString(xlsx, UriKind.RelativeOrAbsolute))
+                            if (xlsx.StartsWith("https://") && Uri.IsWellFormedUriString(xlsx, UriKind.RelativeOrAbsolute))
                             {
                                 using (WebClient wc = new WebClient())
                                 {
